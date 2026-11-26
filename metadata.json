@@ -1,0 +1,10 @@
+{
+  "name": "RuralCare – Rural Healthcare Support System",
+  "description": "A user-friendly healthcare web application connecting rural patients with doctors, digital health cards, appointments, essential services, and emergency assistance.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

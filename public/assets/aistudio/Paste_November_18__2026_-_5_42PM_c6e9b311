@@ -1,0 +1,1014 @@
+# RURALCARE – COMPLETE SUPABASE DATABASE INTEGRATION
+
+Act as an expert full-stack developer specializing in React.js, JavaScript, Supabase, PostgreSQL, authentication, database management and secure application development.
+
+I have already developed a web application named:
+
+**RuralCare – Rural Healthcare Support System**
+
+The frontend application is developed using React.js, JavaScript, Tailwind CSS, React Router DOM and Lucide React.
+
+I have an existing Supabase project and want to connect my existing RuralCare application to that Supabase database.
+
+Your responsibility is to inspect my existing project structure and integrate Supabase into the existing application without changing its design or project concept.
+
+## IMPORTANT INSTRUCTIONS
+
+1. Do not create a new application.
+2. Do not rebuild the frontend.
+3. Do not change the existing RuralCare project concept.
+4. Do not remove any existing functionality.
+5. Do not rename, remove or replace the original eight domains.
+6. Preserve the existing Patient Login and Doctor Login pages.
+7. Preserve the existing Patient Dashboard and Doctor Dashboard.
+8. Preserve the existing English and Kannada language selection.
+9. Preserve the current UI, colours, layout, navigation and responsive design.
+10. Integrate Supabase into the existing React components.
+11. Replace demonstration data with actual Supabase database records wherever integration is completed.
+12. Do not use mock authentication when real Supabase authentication is implemented.
+
+First inspect the complete project structure, existing components, routing, authentication logic and current data handling. Then implement the integration step by step.
+
+# 1. SUPABASE CONFIGURATION
+
+Integrate Supabase using the official JavaScript package.
+
+Install:
+
+```bash
+npm install @supabase/supabase-js
+```
+
+Use the following environment variables:
+
+```env
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
+```
+
+Inspect the existing project framework and use the correct environment-variable access method.
+
+For a Vite React application, use:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
+```
+
+Read the actual values from the configured environment variables.
+
+Create a reusable Supabase client configuration:
+
+`src/lib/supabaseClient.js`
+
+Example for Vite:
+
+```javascript
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabasePublishableKey =
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+if (!supabaseUrl || !supabasePublishableKey) {
+  throw new Error(
+    'Supabase URL or Publishable Key is missing. Check your environment variables.'
+  );
+}
+
+export const supabase = createClient(
+  supabaseUrl,
+  supabasePublishableKey
+);
+```
+
+Adapt this implementation if the existing application uses another framework or runtime.
+
+IMPORTANT SECURITY REQUIREMENTS:
+
+- Never hardcode Supabase credentials in React components.
+- Never expose the Supabase secret key.
+- Never expose the service_role key.
+- Use only the Supabase publishable key in frontend code.
+- Keep privileged database operations on a trusted server.
+- Never disable Row Level Security to resolve database errors.
+
+# 2. RURALCARE – EIGHT ORIGINAL DOMAINS
+
+Connect the following eight existing domains to Supabase.
+
+Do not add, remove or rename any main domain.
+
+**Domain 1: Profile**
+
+Connect patient and doctor profile information to Supabase.
+
+**Domain 2: Dashboard**
+
+Fetch actual patient and doctor dashboard information from the database.
+
+**Domain 3: Health Card**
+
+Connect digital health cards, medical history, allergies and patient records.
+
+**Domain 4: Doctor Details**
+
+Fetch registered doctor information, qualifications, specializations and availability.
+
+**Domain 5: Connecting Doctor to Patient**
+
+Connect patients and doctors through consultation requests and authorized communication.
+
+**Domain 6: Services**
+
+Display healthcare services, hospitals, pharmacies, laboratories, ambulances, health camps and healthcare schemes.
+
+**Domain 7: Doctor Appointment**
+
+Implement real appointment booking and doctor appointment management.
+
+**Domain 8: Emergency Alert System**
+
+Save real patient emergency requests and authorized location information.
+
+All additional database functionality must be implemented within these existing domains.
+
+# 3. PATIENT REGISTRATION AND LOGIN
+
+Connect the existing Patient Registration and Patient Login pages to Supabase Authentication.
+
+Use Supabase Authentication functions.
+
+### Patient Registration
+
+Implement:
+
+- Patient account creation.
+- Email and password registration.
+- Email validation.
+- Password validation.
+- Confirm password validation.
+- Appropriate error handling.
+- Patient profile creation after registration.
+
+Use:
+
+`supabase.auth.signUp()`
+
+Store patient profile information in the profiles table.
+
+Patient registration information:
+
+- Full name.
+- Date of birth.
+- Age.
+- Gender.
+- Email address.
+- Mobile number.
+- Village.
+- District.
+- State.
+- Full address.
+- PIN code.
+- Blood group.
+- Emergency contact name.
+- Emergency contact number.
+
+Generate a unique patient Health ID.
+
+### Patient Login
+
+Use:
+
+`supabase.auth.signInWithPassword()`
+
+Requirements:
+
+- Verify patient credentials.
+- Authenticate using Supabase.
+- Fetch the authenticated patient's role.
+- Fetch the patient's profile.
+- Redirect successfully authenticated patients to `/dashboard`.
+- Maintain the authenticated session.
+- Display meaningful authentication errors.
+- Implement logout using Supabase signOut().
+
+Do not allow doctor accounts to access patient-only routes.
+
+# 4. DOCTOR LOGIN AND REGISTRATION
+
+Connect the existing Doctor Login page to Supabase Authentication.
+
+### Doctor Login
+
+Use Supabase Authentication.
+
+Implement:
+
+- Doctor email and password login.
+- Authentication validation.
+- Fetch the doctor's profile.
+- Verify the doctor's role.
+- Check doctor verification status.
+- Redirect approved doctors to `/doctor-dashboard`.
+- Display appropriate error messages.
+- Maintain the authenticated session.
+
+Only verified doctors should access protected doctor functionality.
+
+### Doctor Registration
+
+Implement doctor registration requests.
+
+Required information:
+
+- Doctor full name.
+- Email address.
+- Mobile number.
+- Medical registration number.
+- Qualification.
+- Specialization.
+- Years of experience.
+- Hospital or clinic name.
+- Hospital address.
+- Password.
+
+New doctor registrations must have a Pending Verification status.
+
+Do not allow users to make themselves verified doctors.
+
+Do not automatically approve doctor registrations.
+
+Doctor verification must be managed through a trusted administrative process.
+
+Connect doctor information to the doctor_profiles table.
+
+# 5. ROLE-BASED AUTHENTICATION
+
+Implement secure role-based access.
+
+Supported roles:
+
+- Patient.
+- Doctor.
+
+Use:
+
+- Supabase Authentication.
+- React Context API.
+- React Router DOM.
+- Protected routes.
+- PostgreSQL role information.
+- Row Level Security.
+
+Authentication requirements:
+
+1. Patients must access the Patient Dashboard.
+2. Doctors must access the Doctor Dashboard.
+3. Patients must not access doctor-only pages.
+4. Doctors must not access patient-only functions without authorization.
+5. Unverified doctors must not access protected doctor functionality.
+6. Unauthenticated users must be redirected to the Login page.
+7. Browser refresh must maintain the authenticated session.
+8. Logout must clear the session.
+9. Users must not be able to change their own roles.
+10. Verify permissions in the database, not only in frontend React components.
+
+Use the existing authentication architecture wherever possible.
+
+# 6. PATIENT PROFILE INTEGRATION
+
+Connect the existing Profile domain to the profiles table.
+
+Implement:
+
+- Create patient profile.
+- Fetch patient profile.
+- Edit patient information.
+- Update patient profile.
+- Display profile photograph.
+- Save village and district information.
+- Display emergency contact details.
+- Display blood group.
+
+All profile data must be associated with the authenticated user's UUID.
+
+When a patient updates their profile, save the updated information in Supabase.
+
+After refreshing the website, display the latest saved profile information.
+
+# 7. DOCTOR INFORMATION AND PROFILES
+
+Connect the existing Doctor Details domain to Supabase.
+
+Create and integrate the following doctor information:
+
+- Doctor ID.
+- Doctor name.
+- Profile photograph.
+- Email.
+- Mobile number.
+- Qualification.
+- Specialization.
+- Experience.
+- Hospital name.
+- Hospital address.
+- District.
+- Consultation fee, if already supported.
+- Available days.
+- Available timings.
+- Verification status.
+
+Implement:
+
+- Fetch registered doctors.
+- Search doctors by name.
+- Filter by specialization.
+- Filter by district.
+- Display doctor profiles.
+- Display doctor availability.
+- Display hospital information.
+
+Only approved and active doctors should appear as available doctors for patient booking.
+
+# 8. DOCTOR AVAILABILITY
+
+Connect doctor availability to Supabase.
+
+Create or use a doctor_availability table.
+
+Store:
+
+- Doctor ID.
+- Available date.
+- Available day.
+- Start time.
+- End time.
+- Availability status.
+- Created timestamp.
+- Updated timestamp.
+
+Doctors should be able to:
+
+- Set available days.
+- Set consultation timings.
+- Mark themselves Available or Unavailable.
+- Update availability.
+- View existing availability.
+
+Patients should be able to view updated doctor availability before booking an appointment.
+
+Prevent conflicting appointment bookings.
+
+Enforce appointment availability checks in a trusted database transaction or server-side operation. Do not rely only on frontend validation.
+
+# 9. CONNECTING DOCTOR TO PATIENT
+
+Connect the existing Connecting Doctor to Patient domain to Supabase.
+
+Implement:
+
+- Patient consultation requests.
+- Doctor connection requests.
+- Doctor acceptance.
+- Doctor rejection.
+- Connected patient information.
+- Consultation history.
+- Connection status.
+
+Create or use a doctor_patient_connections table.
+
+Suggested statuses:
+
+- Pending.
+- Accepted.
+- Rejected.
+- Cancelled.
+
+Implement communication interface functionality only within the existing project design.
+
+Where actual real-time chat is already supported, use Supabase Realtime.
+
+Restrict communication and patient information to authorized users.
+
+# 10. DIGITAL HEALTH CARD AND MEDICAL RECORDS
+
+Connect the existing Health Card domain to Supabase.
+
+Create or use the following database tables:
+
+- health_cards.
+- patient_health_records.
+- patient_allergies.
+- diagnostic_reports.
+
+The Digital Health Card must display:
+
+- Unique Health ID.
+- Patient name.
+- Patient photograph.
+- Date of birth.
+- Blood group.
+- Village and district.
+- Medical history.
+- Allergies.
+- Previous medical records.
+- QR code representation.
+
+Allow patients to view their own health information.
+
+Allow doctors to access patient medical information only when appropriate authorization has been provided.
+
+Do not allow unauthorized users to modify patient medical records.
+
+Implement:
+
+- Add medical records.
+- View medical records.
+- Update permitted records.
+- View previous records.
+- Download supported records.
+
+# 11. DIAGNOSTIC AND LABORATORY REPORTS
+
+Connect diagnostic and laboratory information to the existing Health Card and Services domains.
+
+Create or use a diagnostic_reports table.
+
+Store:
+
+- Report ID.
+- Patient ID.
+- Laboratory name.
+- Test name.
+- Test date.
+- Report date.
+- Report file path.
+- Report status.
+- Created timestamp.
+
+Implement:
+
+- Upload laboratory reports.
+- Fetch existing laboratory reports.
+- Display patient reports.
+- Download authorized reports.
+- Display test information.
+
+Use Supabase Storage for report documents and patient photographs.
+
+Create private Storage buckets for confidential medical documents.
+
+Apply proper Storage policies so patients and authorized doctors can access only permitted files.
+
+Do not make confidential medical records publicly accessible.
+
+# 12. DOCTOR APPOINTMENT INTEGRATION
+
+Connect the existing Doctor Appointment domain to Supabase.
+
+Create or use an appointments table.
+
+Store:
+
+- Appointment ID.
+- Patient ID.
+- Doctor ID.
+- Appointment date.
+- Appointment time.
+- Consultation type.
+- Patient message.
+- Appointment status.
+- Rejection reason.
+- Created timestamp.
+- Updated timestamp.
+
+### Patient Functionality
+
+Patients must be able to:
+
+- Search doctors.
+- View doctor availability.
+- Select a doctor.
+- Choose a date.
+- Select an available time slot.
+- Submit appointment requests.
+- View appointment confirmation.
+- View appointment status.
+- Cancel appointments where permitted.
+- View appointment history.
+
+### Doctor Functionality
+
+Doctors must be able to:
+
+- View appointment requests.
+- View patient details permitted for the appointment.
+- Accept appointments.
+- Reject appointments.
+- Enter rejection reasons.
+- Mark appointments as completed.
+- View upcoming appointments.
+- View completed appointments.
+- View appointment history.
+
+Use these statuses:
+
+- Pending.
+- Accepted.
+- Rejected.
+- Cancelled.
+- Completed.
+
+### Appointment Synchronization
+
+This is very important.
+
+When a patient books an appointment:
+
+1. Save the appointment in Supabase.
+2. Display it in the patient's dashboard.
+3. Display it in the doctor's dashboard.
+4. When the doctor accepts or rejects it, update the database.
+5. Fetch the updated status on the patient's dashboard.
+6. Display an appropriate notification.
+
+Use Supabase Realtime where useful for appointment updates.
+
+Prevent double booking and overlapping appointments through database-level constraints or trusted booking logic.
+
+# 13. HEALTHCARE SERVICES INTEGRATION
+
+Connect the existing Services domain to the database.
+
+Display the following eight service categories:
+
+- Nearby hospitals.
+- Pharmacy services.
+- Ambulance services.
+- Laboratory services.
+- Health camps.
+- Vaccination information.
+- Government healthcare schemes.
+- Health awareness information.
+
+Create or use appropriate tables such as:
+
+- healthcare_services.
+- hospitals.
+- pharmacies.
+- laboratories.
+- health_camps.
+
+Fetch available information from Supabase instead of relying entirely on hardcoded sample data.
+
+Allow administrators or authorized users to manage service information through an appropriately secured process.
+
+Do not create another main navigation domain.
+
+# 14. EMERGENCY ALERT SYSTEM INTEGRATION
+
+Connect the existing Emergency Alert System to Supabase.
+
+Create or use an emergency_alerts table.
+
+Store:
+
+- Emergency alert ID.
+- Patient ID.
+- Emergency contact name.
+- Emergency contact number.
+- Emergency description.
+- GPS latitude.
+- GPS longitude.
+- Location-sharing status.
+- Alert timestamp.
+- Emergency status.
+- Created timestamp.
+
+### Patient Emergency Functionality
+
+When the patient clicks the SOS button:
+
+1. Display an emergency confirmation dialog.
+2. Request browser location permission.
+3. Retrieve GPS coordinates if permission is granted.
+4. Allow the patient to enter an emergency description.
+5. Save the emergency request to Supabase.
+6. Display its actual saved status.
+7. Display the emergency history.
+
+If location access is denied or unavailable:
+
+- Clearly display that location sharing is unavailable.
+- Allow the patient to submit an alert without GPS coordinates where appropriate.
+- Do not generate fake coordinates.
+
+### Doctor Emergency Functionality
+
+Allow authorized doctors to view relevant emergency requests.
+
+Display:
+
+- Patient details.
+- Emergency description.
+- Alert date and time.
+- Shared location, if available.
+- Emergency status.
+
+IMPORTANT:
+
+Do not claim that an ambulance has been dispatched or an emergency alert has reached external services unless an actual ambulance or notification integration confirms delivery.
+
+Saving an alert to Supabase must not be presented as successful emergency-service delivery.
+
+# 15. NOTIFICATION INTEGRATION
+
+Connect patient and doctor notifications to Supabase.
+
+Create or use a notifications table.
+
+Store:
+
+- Notification ID.
+- User ID.
+- Notification title.
+- Notification message.
+- Notification type.
+- Read/unread status.
+- Created timestamp.
+
+Generate notifications for:
+
+- Appointment requests.
+- Appointment acceptance.
+- Appointment rejection.
+- Appointment cancellation.
+- Doctor connection requests.
+- Emergency alert updates.
+- Relevant healthcare updates.
+
+Display notifications in the existing Navbar and Dashboard.
+
+Implement mark-as-read functionality.
+
+# 16. DATABASE TABLE STRUCTURE
+
+First inspect the existing Supabase database.
+
+Do not create duplicate tables if suitable tables already exist.
+
+Use the following suggested structure where tables are missing:
+
+1. profiles
+2. doctor_profiles
+3. doctor_registration_requests
+4. doctor_availability
+5. health_cards
+6. patient_health_records
+7. patient_allergies
+8. diagnostic_reports
+9. appointments
+10. doctor_patient_connections
+11. healthcare_services
+12. hospitals
+13. pharmacies
+14. laboratories
+15. health_camps
+16. emergency_alerts
+17. notifications
+
+Use appropriate:
+
+- UUID primary keys.
+- Foreign keys.
+- Unique constraints.
+- NOT NULL constraints where required.
+- Created timestamps.
+- Updated timestamps.
+- Valid status constraints.
+- Database indexes.
+
+Use the authenticated Supabase user's UUID to associate patient and doctor records.
+
+Avoid duplicate patient accounts, doctor accounts and appointments.
+
+Provide SQL migration scripts for any new tables, indexes, triggers and constraints.
+
+Do not assume that tables have been created successfully. Verify their existence before connecting the frontend.
+
+# 17. ROW LEVEL SECURITY (RLS)
+
+Enable Row Level Security on all tables containing patient information, doctor information, appointments, medical records, emergency requests and notifications.
+
+Create appropriate RLS policies.
+
+### Patient Permissions
+
+Patients should be able to:
+
+- View their own profile.
+- Update permitted personal information.
+- View their own Health Card.
+- View their own medical records.
+- View their own diagnostic reports.
+- Create appointment requests for themselves.
+- View their own appointments.
+- Cancel permitted appointments.
+- Create emergency alerts for themselves.
+- View their own notifications.
+
+Patients must not access another patient's confidential information.
+
+### Doctor Permissions
+
+Verified doctors should be able to:
+
+- View and update their own professional profile.
+- Manage their own availability.
+- View appointments assigned to them.
+- Accept or reject appointments assigned to them.
+- Access authorized patient information.
+- View consultation records they are permitted to access.
+- View relevant emergency alerts.
+
+Doctors must not access unrelated patient medical records.
+
+### Important Security Rules
+
+- Never trust role information submitted from the browser.
+- Do not allow users to update their own role.
+- Do not allow users to approve themselves as verified doctors.
+- Use protected database functions or administrative server-side operations for privileged tasks.
+- Use `auth.uid()` in RLS policies.
+- Prevent unauthorized access to diagnostic reports and medical documents.
+- Apply appropriate RLS and Storage policies.
+
+Provide complete SQL policies.
+
+Test the policies using separate patient and doctor accounts.
+
+# 18. FRONTEND INTEGRATION
+
+Connect the existing React pages to real Supabase database operations.
+
+Preserve existing page names and functionality.
+
+Use reusable functions and services for database operations.
+
+Suggested project structure, adapting to the existing structure:
+
+src/
+  lib/
+    supabaseClient.js
+
+  services/
+    authService.js
+    profileService.js
+    doctorService.js
+    appointmentService.js
+    healthRecordService.js
+    emergencyService.js
+    notificationService.js
+
+  context/
+    AuthContext.jsx
+
+  components/
+    Sidebar.jsx
+    Navbar.jsx
+    ProtectedRoute.jsx
+
+  pages/
+    Profile.jsx
+    Dashboard.jsx
+    HealthCardPage.jsx
+    DoctorDetails.jsx
+    DoctorPatientConnection.jsx
+    Services.jsx
+    DoctorAppointment.jsx
+    EmergencyAlert.jsx
+    Login.jsx
+    Register.jsx
+
+Do not overwrite existing components unnecessarily.
+
+Reuse the existing components wherever possible.
+
+# 19. LOADING, SUCCESS AND ERROR HANDLING
+
+Implement proper user feedback throughout the application.
+
+Examples:
+
+Loading:
+- Display loading indicators while fetching database records.
+- Prevent repeated form submissions.
+- Disable buttons while operations are processing.
+
+Success:
+- Profile updated successfully.
+- Appointment request submitted successfully.
+- Doctor availability updated successfully.
+- Medical record uploaded successfully.
+- Emergency request saved successfully.
+
+Error:
+- Failed to connect to Supabase.
+- Invalid login credentials.
+- Email already registered.
+- Unable to fetch doctor details.
+- Appointment slot is no longer available.
+- Failed to save patient information.
+- Access denied.
+- Location permission unavailable.
+
+Show clear and understandable error messages.
+
+Do not display success messages when database operations fail.
+
+Do not hide errors using empty catch blocks.
+
+# 20. DATABASE STORAGE AND PERSISTENCE
+
+All submitted data must be saved in the appropriate Supabase database tables.
+
+Requirements:
+
+- Data must remain available after browser refresh.
+- Data must remain available after logout and subsequent login.
+- Data must be fetched from the database.
+- Profile changes must persist.
+- Appointment updates must persist.
+- Medical records must persist.
+- Emergency requests must persist.
+- Diagnostic reports must persist.
+
+Use Supabase Storage for photographs and document uploads.
+
+Do not use localStorage as the primary database.
+
+Use localStorage only for suitable preferences such as language selection.
+
+# 21. ENGLISH AND KANNADA LANGUAGE SUPPORT
+
+Preserve the existing multilingual functionality.
+
+Support:
+
+1. English.
+2. Kannada.
+
+Maintain the user's language preference while navigating between pages.
+
+Ensure translated text works with:
+
+- Database loading messages.
+- Authentication messages.
+- Form validation.
+- Appointment notifications.
+- Doctor notifications.
+- Emergency alert messages.
+
+Do not remove the existing language selector.
+
+Patient-entered names, addresses and other personal information should be displayed as entered and should not be automatically translated.
+
+# 22. FIX SUPABASE CONNECTION ERRORS
+
+Check for the following possible issues:
+
+- Incorrect Supabase Project URL.
+- Incorrect publishable key.
+- Missing environment variables.
+- Incorrect environment-variable access syntax.
+- Missing Supabase package.
+- Supabase client initialization errors.
+- Incorrect table names.
+- Incorrect column names.
+- Authentication session errors.
+- RLS permission errors.
+- Storage permission errors.
+- Incorrect database relationships.
+- Invalid SQL queries.
+
+If the application displays "Failed to fetch":
+
+1. Verify the Project URL.
+2. Verify that the URL uses HTTPS.
+3. Verify that the publishable key belongs to the same project.
+4. Check browser console errors.
+5. Check network requests.
+6. Check environment-variable configuration.
+7. Restart the development server after environment-variable changes.
+8. Inspect Supabase project availability and API responses.
+9. Check RLS policies and authentication configuration.
+
+Do not solve connection problems by disabling security policies.
+
+# 23. TESTING AND VERIFICATION
+
+After completing the integration, test the actual application using the existing Supabase project.
+
+### Authentication Testing
+
+- Patient registration.
+- Patient login.
+- Doctor login.
+- Doctor verification.
+- Logout.
+- Session restoration.
+- Unauthorized route access.
+
+### Database Testing
+
+- Insert patient profile.
+- Fetch patient profile.
+- Update patient profile.
+- Insert doctor profile.
+- Fetch doctor details.
+- Update doctor availability.
+- Insert appointment.
+- Fetch appointment.
+- Update appointment status.
+- Insert emergency request.
+- Fetch emergency history.
+- Upload diagnostic report.
+- Fetch diagnostic report.
+- Test notification creation and retrieval.
+
+### Security Testing
+
+Test using separate patient and doctor accounts.
+
+Verify that:
+
+- Patients cannot access other patients' records.
+- Doctors cannot access unauthorized patient records.
+- Patients cannot access doctor-only operations.
+- Unverified doctors cannot access protected doctor features.
+- Users cannot change their own roles.
+- Confidential files cannot be accessed publicly.
+
+### UI Testing
+
+Verify that:
+
+- Existing design remains unchanged.
+- All eight domains work.
+- Patient Dashboard works.
+- Doctor Dashboard works.
+- Appointment forms work.
+- Emergency requests work.
+- English/Kannada translation works.
+- Responsive design remains functional.
+- No buttons overlap.
+- No forms overlap.
+- No runtime errors occur.
+
+# 24. FINAL IMPLEMENTATION REQUIREMENTS
+
+Before finishing:
+
+1. Inspect the complete existing RuralCare source code.
+2. Inspect the existing Supabase configuration.
+3. Inspect the existing database tables.
+4. Identify missing database tables.
+5. Identify missing SQL policies.
+6. Implement the Supabase client.
+7. Integrate patient authentication.
+8. Integrate doctor authentication.
+9. Connect all eight original domains.
+10. Implement database fetching and saving.
+11. Implement Row Level Security.
+12. Connect Supabase Storage where needed.
+13. Test insert, select, update and delete operations where appropriate.
+14. Fix all integration errors.
+15. Preserve the original frontend design.
+16. Provide the SQL scripts for any manually required database changes.
+
+At the end, provide a clear implementation report containing:
+
+- Files created.
+- Files modified.
+- Supabase modules successfully connected.
+- Database tables used.
+- Database tables that need to be created.
+- SQL policies that need to be executed manually.
+- Environment variables that need configuration.
+- Features successfully tested.
+- Any remaining integration issues.
+
+**MOST IMPORTANT FINAL INSTRUCTION:**
+
+I already have an existing RuralCare application and an existing Supabase project.
+
+Connect these two existing projects.
+
+Do not create a new website or replace the existing frontend.
+
+Maintain the original eight domains, patient and doctor login systems, separate patient and doctor dashboards, English and Kannada support, and all existing functionalities.
+
+The final application must use real Supabase authentication and database records instead of demonstration data wherever integration has been completed.
+
+Do not claim that a feature is connected or tested unless it has actually been implemented and verified.
